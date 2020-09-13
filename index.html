@@ -15,9 +15,11 @@
   document.body.appendChild(canvas);
   
   
-  /* ここからスネークゲームのプログラム */
+  /*
+  // ★ここからスネークゲームのプログラム★
+  */
   
-  const GRID = 20;
+  const GRID = 20; //グリッドの1マス（お好みで調整可能）
   const STAGE = canvas.width / GRID;
   
   const snake = {
@@ -35,8 +37,10 @@
       ctx.fillStyle = 'green';
       this.body.forEach(obj => {
         ctx.fillRect(obj.x*GRID, obj.y*GRID, GRID-2, GRID-2);
-        if(this.x === obj.x && this.y === obj.y) init();
+        if(this.x === obj.x && this.y === obj.y) init(); //自分自身に接触したら最初に戻る
       })
+      
+      //ヘビが設定した長さ以上にならないように制限
       if(this.body.length >= this.tail) this.body.shift();
     }
   }
@@ -50,6 +54,7 @@
     }
   }
   
+  // 初期化処理
   const init = () => {
     snake.x = STAGE / 2;
     snake.y = STAGE / 2;
@@ -59,17 +64,21 @@
     item.x = Math.floor(Math.random() * STAGE);
     item.y = Math.floor(Math.random() * STAGE);    
   }
+  
+  //メインの繰り返し処理
   const loop = () => {
     ctx.clearRect(0,0,canvas.width,canvas.height);
     
     snake.update();
     item.update();
     
+    //ヘビが画面外に消えないように制御
     if(snake.x < 0)       snake.x = STAGE-1;
     if(snake.y < 0)       snake.y = STAGE-1;
     if(snake.x > STAGE-1) snake.x = 0;
     if(snake.y > STAGE-1) snake.y = 0;
     
+    //アイテムを食べれるようにする
     if(snake.x === item.x && snake.y === item.y) {
       snake.tail++;
       item.x = Math.floor(Math.random() * STAGE);
@@ -78,7 +87,7 @@
   }
   
   init();
-  setInterval(loop, 1000/15);
+  setInterval(loop, 1000/15); //15フレームでゲームを描画（お好みで調整可能）
   
   document.addEventListener('keydown', e => {
     switch(e.key) {
